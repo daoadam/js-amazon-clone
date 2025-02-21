@@ -86,7 +86,7 @@ products.forEach((product) => {
 
 //instead of using names lets use ID because two items can have the same name
 
-document.querySelectorAll(".add-to-cart-button").forEach((button) => {
+/*document.querySelectorAll(".add-to-cart-button").forEach((button) => {
     button.addEventListener(("click"), ()=>{
         const productID = button.dataset.productID;
 
@@ -106,7 +106,66 @@ document.querySelectorAll(".add-to-cart-button").forEach((button) => {
                 quantity: 1
             })
         }
-        console.log(cart)
-    });
-});
 
+
+        //update the quantity
+        let cartQuantity = 0;
+        cart.forEach((item) => {
+            if(item.quantity){
+                cartQuantity += Number(item.quantity);
+            } else {
+                cartQuantity += 0;
+        }});
+
+        console.log(cartQuantity)
+        console.log(cart) 
+    });
+}); */
+
+//okay lets make the add cart button interactive 
+//- it should add items to cart
+//what is in an item
+//item is an object
+//it contains then quantity and the unique id, because names can be the same
+//we need to add click event listeners to each button using click
+
+//push the new items onto the cart array
+
+document.querySelectorAll(".add-to-cart-button").forEach((button) => {
+    button.addEventListener(("click"), () => {
+        let productId = button.dataset.productID;
+
+
+        //if its a duplicate item we need to update the quantity + 1
+        let matchingItem;
+        cart.forEach((item) =>{
+            if(item.productId === productId){
+                matchingItem = item;
+            } //makes matching item a truthy value if there exists a matching item
+        })
+
+        if(matchingItem){ //if matchingitem is true increase the quantity
+            matchingItem.quantity++;
+        } else {
+            cart.push({
+                productId: productId,
+                quantity: 1
+            })
+        }
+        //we need to update the quantity for each item in the cart
+
+        console.log("Cart Items:");
+        cart.forEach((item) => {
+            console.log(`Product ${item.productId} - Quantity: ${item.quantity}`);
+        });
+
+        let cartQuantity = 0;
+        cart.forEach((item) =>{
+            cartQuantity += Number(item.quantity) || 0;
+        })
+        
+            console.log(cartQuantity)
+            console.log(cart)
+    });
+    //we need to access the product id by using a dataset attribute attached to each button
+});
