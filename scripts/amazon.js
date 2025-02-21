@@ -84,6 +84,8 @@ products.forEach((product) => {
 });
 
 
+
+
 //instead of using names lets use ID because two items can have the same name
 
 /*document.querySelectorAll(".add-to-cart-button").forEach((button) => {
@@ -166,6 +168,10 @@ document.querySelectorAll(".add-to-cart-button").forEach((button) => {
         
             console.log(cartQuantity)
             console.log(cart)
+
+        const displayCartQuantity = document.querySelector(".cart-quantity")
+        displayCartQuantity.textContent = cartQuantity;
+
     });
     //we need to access the product id by using a dataset attribute attached to each button
 });
