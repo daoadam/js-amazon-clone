@@ -1,12 +1,3 @@
-
-
-//how to save the information?
-//create a variable that stores a list of objects
-//each object has a name, price, rating and image
-//it is stored in an array that can add(push) and remove(pop)
-
-
-
 let productsGrid = document.querySelector(".js-products-grid");
 
 //make a foreach loop that generates the html instead of this bs on our amazon
@@ -85,14 +76,37 @@ products.forEach((product) => {
     const addToCartButton = document.createElement("button");
     addToCartButton.classList.add("add-to-cart-button", "button-primary");
     addToCartButton.textContent = "Add to Cart";
+    addToCartButton.dataset.productID = product.id;
     productContainer.appendChild(addToCartButton);
 
     // Append final product container to the grid
     productsGrid.appendChild(productContainer);
 });
 
-console.log(productsGrid)
 
+//instead of using names lets use ID because two items can have the same name
 
+document.querySelectorAll(".add-to-cart-button").forEach((button) => {
+    button.addEventListener(("click"), ()=>{
+        const productID = button.dataset.productID;
 
+        let matchingItem;
+
+        cart.forEach((item)=> {
+            if(productID === item.productID){
+                matchingItem = item;
+            }
+        });
+
+        if(matchingItem){
+            matchingItem.quantity++;
+        } else {
+            cart.push({
+                productID: productID,
+                quantity: 1
+            })
+        }
+        console.log(cart)
+    });
+});
 
