@@ -50,6 +50,7 @@ products.forEach((product) => {
     productQuantityContainer.classList.add("product-quantity-container");
 
     const select = document.createElement("select");
+    select.dataset.productId = product.id
     for (let i = 1; i <= 10; i++) {
         const option = document.createElement("option");
         option.value = i;
@@ -136,6 +137,7 @@ products.forEach((product) => {
 document.querySelectorAll(".add-to-cart-button").forEach((button) => {
     button.addEventListener(("click"), () => {
         let productId = button.dataset.productID;
+        let productIdQuantity = Number(document.querySelector(`select[data-product-id="${productId}"]`).value);
 
 
         //if its a duplicate item we need to update the quantity + 1
@@ -147,11 +149,11 @@ document.querySelectorAll(".add-to-cart-button").forEach((button) => {
         })
 
         if(matchingItem){ //if matchingitem is true increase the quantity
-            matchingItem.quantity++;
+            matchingItem.quantity += productIdQuantity;
         } else {
             cart.push({
                 productId: productId,
-                quantity: 1
+                quantity: productIdQuantity
             })
         }
         //we need to update the quantity for each item in the cart
