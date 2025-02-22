@@ -1,3 +1,6 @@
+import {cart, addToCart} from '../data/cart.js'
+import {products} from '../data/products.js'
+
 let productsGrid = document.querySelector(".js-products-grid");
 
 //make a foreach loop that generates the html instead of this bs on our amazon
@@ -65,6 +68,7 @@ products.forEach((product) => {
     // Added to cart
     const addedToCart = document.createElement("div");
     addedToCart.classList.add("added-to-cart");
+    addedToCart.dataset.productId = product.id;
 
     const checkmarkImg = document.createElement("img");
     checkmarkImg.src = "images/icons/checkmark.png";
@@ -77,7 +81,7 @@ products.forEach((product) => {
     const addToCartButton = document.createElement("button");
     addToCartButton.classList.add("add-to-cart-button", "button-primary");
     addToCartButton.textContent = "Add to Cart";
-    addToCartButton.dataset.productID = product.id;
+    addToCartButton.dataset.productId = product.id;
     productContainer.appendChild(addToCartButton);
 
     // Append final product container to the grid
@@ -134,46 +138,56 @@ products.forEach((product) => {
 
 //push the new items onto the cart array
 
+
+
+
+//create a function that updates the add to cart button to display added when clicked
+//we already have the name and classlist associated just need to addeventlistener
+//change the style of the of the div from opacity:0 => 100
+function displayAddedMessage(productId){ 
+    let addedToCartMessage = document.querySelector(`.added-to-cart[data-product-id="${productId}"]`)
+    if(addedToCartMessage){
+    addedToCartMessage.style.opacity = "1";
+}}
+
+function hideDisplayAddedMessage(productId){ 
+    setTimeout(() => {
+        let addedToCartMessage = document.querySelector(`.added-to-cart[data-product-id="${productId}"]`)
+        if(addedToCartMessage){
+            addedToCartMessage.style.opacity = "0";
+        }
+    }, 2000)
+}
+
+function displayCartQuantity(){
+    let cartQuantity = 0;
+    cart.forEach((cartItem) =>{
+        cartQuantity += Number(cartItem.quantity) || 0;
+    })
+    
+        console.log(cartQuantity)
+        console.log(cart)
+
+    const displayCartQuantity = document.querySelector(".cart-quantity")
+    displayCartQuantity.textContent = cartQuantity;
+}
+
+
 document.querySelectorAll(".add-to-cart-button").forEach((button) => {
     button.addEventListener(("click"), () => {
-        let productId = button.dataset.productID;
+        let productId = button.dataset.productId;
         let productIdQuantity = Number(document.querySelector(`select[data-product-id="${productId}"]`).value);
 
 
         //if its a duplicate item we need to update the quantity + 1
-        let matchingItem;
-        cart.forEach((item) =>{
-            if(item.productId === productId){
-                matchingItem = item;
-            } //makes matching item a truthy value if there exists a matching item
-        })
-
-        if(matchingItem){ //if matchingitem is true increase the quantity
-            matchingItem.quantity += productIdQuantity;
-        } else {
-            cart.push({
-                productId: productId,
-                quantity: productIdQuantity
-            })
-        }
+        addToCart(productId, productIdQuantity);
         //we need to update the quantity for each item in the cart
 
-        console.log("Cart Items:");
-        cart.forEach((item) => {
-            console.log(`Product ${item.productId} - Quantity: ${item.quantity}`);
-        });
+        displayCartQuantity();
 
-        let cartQuantity = 0;
-        cart.forEach((item) =>{
-            cartQuantity += Number(item.quantity) || 0;
-        })
+        displayAddedMessage(productId)
         
-            console.log(cartQuantity)
-            console.log(cart)
-
-        const displayCartQuantity = document.querySelector(".cart-quantity")
-        displayCartQuantity.textContent = cartQuantity;
-
+        hideDisplayAddedMessage(productId);
     });
-    //we need to access the product id by using a dataset attribute attached to each button
 });
+
